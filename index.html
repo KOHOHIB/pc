@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PC Balance Configurator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">PC Balance Configurator</p>
+          <h1>Собери сбалансированный ПК под свой бюджет за 2 минуты</h1>
+          <p class="lead">
+            Локальный MVP подбирает комплектующие, проверяет совместимость и объясняет,
+            почему сборка подходит под задачу.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#configurator">Подобрать ПК</a>
+            <button class="button" id="showPresets" type="button">Готовые сборки</button>
+            <button class="button" id="compareMode" type="button">Сравнить комплектующие</button>
+          </div>
+        </div>
+        <div class="rig-visual" aria-label="Схема игрового компьютера">
+          <div class="case-glow"></div>
+          <div class="pc-case">
+            <div class="fan fan-a"></div>
+            <div class="fan fan-b"></div>
+            <div class="motherboard">
+              <span class="cpu-chip">CPU</span>
+              <span class="ram-stick one"></span>
+              <span class="ram-stick two"></span>
+              <span class="m2-drive"></span>
+            </div>
+            <div class="gpu-card">GPU</div>
+            <div class="psu">PSU</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace" id="configurator">
+        <aside class="panel controls">
+          <div class="section-title">
+            <p class="eyebrow">Конфигуратор</p>
+            <h2>Параметры</h2>
+          </div>
+
+          <label class="field">
+            <span>Для чего ПК?</span>
+            <select id="task">
+              <option value="gaming">Игры</option>
+              <option value="workstation">Работа и 3D</option>
+              <option value="editing">Монтаж</option>
+              <option value="streaming">Стриминг</option>
+              <option value="office">Офис</option>
+              <option value="balanced">Универсальный ПК</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Бюджет</span>
+            <select id="budget">
+              <option value="15000">15 000 ₽</option>
+              <option value="20000">20 000 ₽</option>
+              <option value="25000">25 000 ₽</option>
+              <option value="30000">30 000 ₽</option>
+              <option value="40000">40 000 ₽</option>
+              <option value="50000">50 000 ₽</option>
+              <option value="80000">80 000 ₽</option>
+              <option value="120000" selected>120 000 ₽</option>
+              <option value="200000">200 000+ ₽</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Состояние деталей</span>
+            <select id="conditionPref">
+              <option value="any" selected>Любые</option>
+              <option value="new">Только новые</option>
+              <option value="used">Можно б/у</option>
+            </select>
+          </label>
+
+          <fieldset class="field">
+            <legend>Приоритет</legend>
+            <div class="segments" id="priority">
+              <button class="segment active" type="button" data-value="fps">FPS</button>
+              <button class="segment" type="button" data-value="quiet">Тишина</button>
+              <button class="segment" type="button" data-value="upgrade">Апгрейд</button>
+              <button class="segment" type="button" data-value="compact">Компактность</button>
+              <button class="segment" type="button" data-value="looks">Внешний вид</button>
+            </div>
+          </fieldset>
+
+          <div class="preference-grid">
+            <label class="field">
+              <span>CPU</span>
+              <select id="cpuBrand">
+                <option value="any">Любой</option>
+                <option value="AMD">AMD</option>
+                <option value="Intel">Intel</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>GPU</span>
+              <select id="gpuBrand">
+                <option value="any">Любая</option>
+                <option value="Nvidia">Nvidia</option>
+                <option value="AMD">AMD</option>
+                <option value="Intel">Intel</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Корпус</span>
+              <select id="caseSize">
+                <option value="any">Любой</option>
+                <option value="compact">Компактный</option>
+                <option value="mid">Средний</option>
+              </select>
+            </label>
+          </div>
+
+          <button class="button primary wide" id="buildButton" type="button">Подобрать сборку</button>
+        </aside>
+
+        <section class="results">
+          <div class="result-header">
+            <div>
+              <p class="eyebrow">Результат</p>
+              <h2 id="buildName">Сбалансированная сборка</h2>
+            </div>
+            <div class="price-box">
+              <span>Примерно</span>
+              <strong id="totalPrice">0 ₽</strong>
+            </div>
+          </div>
+
+          <div class="score-row">
+            <div class="score-dial">
+              <span id="balanceScore">0</span>
+              <small>баланс</small>
+            </div>
+            <div class="score-bars" id="scoreBars"></div>
+          </div>
+
+          <div class="parts-table" id="partsTable"></div>
+
+          <div class="insights">
+            <article>
+              <h3>Объяснение</h3>
+              <p id="explanation"></p>
+            </article>
+            <article>
+              <h3>Совместимость</h3>
+              <ul id="compatibilityList"></ul>
+            </article>
+            <article>
+              <h3>Альтернативы</h3>
+              <ul id="alternativesList"></ul>
+            </article>
+            <article>
+              <h3>Апгрейд-путь</h3>
+              <p id="upgradePath"></p>
+            </article>
+          </div>
+        </section>
+
+        <aside class="panel chat-panel">
+          <div class="section-title">
+            <p class="eyebrow">Чат-подбор</p>
+            <h2>PC-консультант</h2>
+          </div>
+          <div class="chat-feed" id="chatFeed" aria-live="polite"></div>
+          <div class="quick-prompts">
+            <button type="button" data-prompt="Нужен ПК для игр до 90000 рублей">Игры до 90к</button>
+            <button type="button" data-prompt="Нужен самый бюджетный игровой ПК до 40000 рублей, можно б/у">До 40к</button>
+            <button type="button" data-prompt="Нужен офисный б/у компьютер до 15000 рублей">Офис 15к</button>
+            <button type="button" data-prompt="Сделай дешевле">Дешевле</button>
+            <button type="button" data-prompt="Хочу тише">Тише</button>
+            <button type="button" data-prompt="Замени видеокарту на Nvidia">Nvidia GPU</button>
+          </div>
+          <form class="chat-input" id="chatForm">
+            <input id="chatMessage" type="text" placeholder="Например: сделай дешевле на 15000 или замени CPU на AMD" autocomplete="off" />
+            <button class="button primary" type="submit">Отправить</button>
+          </form>
+        </aside>
+      </section>
+
+      <section class="compare" id="compare">
+        <div class="section-title">
+          <p class="eyebrow">Сравнение</p>
+          <h2>Лучшие детали в демо-базе</h2>
+        </div>
+        <div class="compare-grid" id="compareGrid"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
